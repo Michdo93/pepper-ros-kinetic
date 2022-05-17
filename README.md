@@ -188,3 +188,47 @@ roslaunch pepper_bringup pepper_full.launch nao_ip:=<yourRobotIP> roscore_ip:=<r
 If you run ROS inside a virtual machine instead of `èth0` it could be something like `enps03` or `ens33` etc.
 
 ## Gazebo
+
+Please have a look at [here](https://github.com/ros-naoqi/pepper_robot/issues/47) and [here](https://answers.ros.org/question/292444/gazebo_ros_control-plugin-gazeboroscontrolplugin-missing-legacymodens-defaultrobothwsim/).
+
+```
+roslaunch pepper_gazebo_plugin pepper_gazebo_plugin_Y20.launch
+roslaunch pepper_dcm_bringup pepper_bringup.launch robot_ip:=127.0.0.1 network_interface:=eno2
+roslaunch pepper_bringup pepper_full.launch nao_ip:=127.0.0.1 roscore_ip:=192.168.0.1 network_interface:=eno2
+
+
+rosrun rviz rviz -d ~/catkin_ws/src/pepper_robot/pepper_description/config/pepper.rviz
+rosrun rviz rviz -d ~/catkin_ws/src/pepper_description/config/pepper.rviz
+
+rosrun image_view image_view image:=/pepper_robot/camera/bottom/image_raw
+```
+
+## Other
+
+```
+git clone https://github.com/ros-naoqi/nao_extras.git
+git clone https://github.com/ahornung/nao_common.git
+
+git clone https://github.com/Michdo93/pepper_nav_bringup
+
+cd .. && catkin_make
+
+roslaunch nao_teleop teleop_joy.launch
+
+roslaunch pepper_plymouth_nao mapping.launch
+
+rosrun map_server map_server <path to map>/map.yaml
+rosrun amcl amcl scan:=/pepper_robot/laser
+rosrun map_server map_saver
+
+roslaunch pepper_nav_bringup nav.launch
+roslaunch pepper_nav_bringup nav.launch map:=<full path to your map.yaml>
+```
+
+Please notice:
+https://github.com/ros-naoqi/pepper_robot/pull/27
+
+```
+sudo apt install ros-kinetic-octo*
+roslaunch pepper_nav_bringup octomap_mapping.launch
+```
